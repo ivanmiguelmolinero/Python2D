@@ -46,6 +46,6 @@ class MiCapa(cocos.layer.Layer):
                     self.mi_actor. position = (nueva_x, nueva_y)
 
 if __name__ == '__main__':
-    cocos.director.director.init(caption = 'Movimiento de esfera mediante teclado', width = 1280, height = 720, fullscreen = True)
+    cocos.director.director.init(caption = 'Movimiento de esfera limitado mediante teclado', width = 1280, height = 720, fullscreen = True)
     mi_escena = cocos.scene.Scene(MiCapa())
     cocos.director.director.run(mi_escena)
