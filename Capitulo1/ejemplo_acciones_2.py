@@ -2,7 +2,7 @@
 # Name:        ejemplo_acciones_2
 # Purpose:
 #
-# Author:      ivijo
+# Author:      ivijoyo
 #
 # Created:     30/07/2021
 # Copyright:   (c) ivijo 2021
