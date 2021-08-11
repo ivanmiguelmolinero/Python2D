@@ -1,10 +1,10 @@
 #-------------------------------------------------------------------------------
-# Name:        arcade_4
+# Name:        arcade_5
 # Purpose:
 #
 # Author:      ivijo
 #
-# Created:     10/08/2021
+# Created:     11/08/2021
 # Copyright:   (c) ivijo 2021
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
@@ -19,14 +19,19 @@ from cocos.sprite import Sprite
 from cocos.euclid import Vector2
 from random import choice, randint
 from collections import defaultdict
+from cocos.collision_model import CollisionManagerBruteForce, AARectShape
 
 class MiObjeto(Sprite):
     def __init__(self, image, x, y):
         super().__init__(image)
         self.position = Vector2(x, y)
+        self.cshape = AARectShape(self.position,
+                                    self.width * 0.5,
+                                    self.height * 0.5)
 
     def move(self, offset):
         self.position += offset
+        self.cshape.center += offset
 
     def update(self, delta_t):
         pass
@@ -99,7 +104,7 @@ class MiAlien(MiObjeto):
             pygame.mixer.Sound.set_volume(sonido_disparo, 0.25)
             pygame.mixer.Sound.play(sonido_disparo)
             self.parent.add(a)
-            
+
 class MiCapa(Layer):
     is_event_handler = True
 
@@ -112,6 +117,7 @@ class MiCapa(Layer):
     def __init__(self):
         super().__init__()
         self.ancho_ventana, self.alto_ventana = director.get_window_size()
+        self.man_col = CollisionManagerBruteForce()
         self.crear_misil()
         self.crear_alien()
         self.schedule(self.update)
@@ -125,8 +131,19 @@ class MiCapa(Layer):
         self.add(self.mi_alien)
 
     def update(self, dt):
+        self.man_col.clear()
         for _, node in self.children:
             node.update(dt)
+        for _, node in self.children:
+            self.man_col.add(node)
+        
+        self.collide(self.misil)
+
+    def collide(self, node):
+        if node is not None:
+            for other in self.man_col.iter_colliding(node):
+                other.kill()
+                node.kill()
 
 if __name__ == '__main__':
     pygame.init()

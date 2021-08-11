@@ -1,32 +1,39 @@
 #-------------------------------------------------------------------------------
-# Name:        arcade_4
+# Name:        arcade_6
 # Purpose:
 #
 # Author:      ivijo
 #
-# Created:     10/08/2021
+# Created:     11/08/2021
 # Copyright:   (c) ivijo 2021
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 
 import pygame
+from pyglet.image.animation import Animation
 from pyglet.window import key
-from pyglet.image import load
+from pyglet.image import ImageGrid, load
 from cocos.director import director
 from cocos.layer import Layer
 from cocos.scene import Scene
 from cocos.sprite import Sprite
 from cocos.euclid import Vector2
+from cocos.actions import Delay, CallFunc
 from random import choice, randint
 from collections import defaultdict
+from cocos.collision_model import CollisionManagerBruteForce, AARectShape
 
 class MiObjeto(Sprite):
     def __init__(self, image, x, y):
         super().__init__(image)
         self.position = Vector2(x, y)
+        self.cshape = AARectShape(self.position,
+                                    self.width * 0.5,
+                                    self.height * 0.5)
 
     def move(self, offset):
         self.position += offset
+        self.cshape.center += offset
 
     def update(self, delta_t):
         pass
@@ -46,7 +53,7 @@ class MiMisil(MiObjeto):
         if pulsadas[key.SPACE] and self.esta_lanzado == False:
             self.image = load('./Capitulo2/mi_misil_2.png')
             sonido_misil = pygame.mixer.Sound("./Capitulo2/misil.wav")
-            pygame.mixer.Sound.set_volume(sonido_misil, 0.25)
+            pygame.mixer.Sound.set_volume(sonido_misil, 0.1)
             pygame.mixer.Sound.play(sonido_misil)
             self.esta_lanzado = True
         elif self.esta_lanzado == True:
@@ -62,7 +69,7 @@ class MiMisil(MiObjeto):
             self.kill()
 
     def on_exit(self):
-        self.parent.crear_misil()
+        self.do(Delay(1) + CallFunc(self.parent.crear_misil))
 
 
 class MiRayo(MiObjeto):
@@ -99,7 +106,7 @@ class MiAlien(MiObjeto):
             pygame.mixer.Sound.set_volume(sonido_disparo, 0.25)
             pygame.mixer.Sound.play(sonido_disparo)
             self.parent.add(a)
-            
+
 class MiCapa(Layer):
     is_event_handler = True
 
@@ -112,6 +119,7 @@ class MiCapa(Layer):
     def __init__(self):
         super().__init__()
         self.ancho_ventana, self.alto_ventana = director.get_window_size()
+        self.man_col = CollisionManagerBruteForce()
         self.crear_misil()
         self.crear_alien()
         self.schedule(self.update)
@@ -125,8 +133,31 @@ class MiCapa(Layer):
         self.add(self.mi_alien)
 
     def update(self, dt):
+        self.man_col.clear()
         for _, node in self.children:
-            node.update(dt)
+            if isinstance(node, MiObjeto):
+                node.update(dt)
+        for _, node in self.children:
+            if isinstance(node, MiObjeto):
+                self.man_col.add(node)
+        
+        self.collide(self.misil)
+
+    def collide(self, node):
+        if node is not None:
+            for other in self.man_col.iter_colliding(node):
+                sonido_explosion = pygame.mixer.Sound("./Capitulo2/explosion.wav")
+                pygame.mixer.Sound.set_volume(sonido_explosion, 0.25)
+                pygame.mixer.Sound.play(sonido_explosion)
+                if self.children.count((0, other)) != 0:
+                    other.kill()
+                if self.children.count((0, node)) != 0:
+                    node.kill()
+                seq = ImageGrid(load('./Capitulo2/secuencia_explosion.png'), 4, 4)
+                anim = Animation.from_image_sequence(seq, 0.05, False)
+                self.mi_sprite = Sprite(anim, (other.x, other.y))
+                self.add(self.mi_sprite)
+                self.do(Delay(0.8) + CallFunc(self.mi_sprite.kill))
 
 if __name__ == '__main__':
     pygame.init()
