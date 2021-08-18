@@ -45,8 +45,13 @@ class MiGuerrero(Sprite):
         despues.y += dy
 
         self.velocidad = self.man_col(antes, despues, vx, vy)
-        self.en_suelo = (despues.y == antes.y)
-        self.position = despues.center
+        if (despues.y != antes.y) or (despues.x != antes.x):
+            self.velocidad = self.man_reb(antes, despues, vx, vy)
+            self.en_suelo = (despues.y == antes.y)
+            self.position = despues.center
+        else:
+            self.en_suelo = (despues.y == antes.y)
+            self.position = despues.center
 
 
 class Control(Action):
@@ -66,7 +71,7 @@ def main():
 
     manejador_scroll = ScrollingManager()
     mi_mapa = load_tmx('mapa_largo.tmx')['capa0']
-    #mi_mapa2 = load_tmx('mapa_largo.tmx')['fondo']
+    mi_mapa2 = load_tmx('mapa_largo.tmx')['rebote']
     
     #manejador_scroll.add(mi_mapa2)
 
@@ -79,8 +84,12 @@ def main():
     mapa_colision = RectMapCollider()
     mapa_colision.on_bump_handler = mapa_colision.on_bump_slide
     personaje.man_col = make_collision_handler(mapa_colision, mi_mapa)
+    mapa_rebote = RectMapCollider()
+    mapa_rebote.on_bump_handler = mapa_rebote.on_bump_bounce
+    personaje.man_reb = make_collision_handler(mapa_rebote, mi_mapa2)
 
     manejador_scroll.add(mi_mapa)
+    manejador_scroll.add(mi_mapa2)
     manejador_scroll.add(capa_personaje)
 
     mi_escena = Scene(manejador_scroll)
