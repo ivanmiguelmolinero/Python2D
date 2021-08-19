@@ -42,17 +42,17 @@
    </properties>
    <polyline points="0,0 -1278,-4"/>
   </object>
-  <object id="3" x="97.3333" y="126.667" width="125.333" height="34.6667">
+  <object id="3" x="95.8788" y="128.122" width="128.06" height="31.5758">
+   <properties>
+    <property name="solidas" value="arriba2"/>
+   </properties>
+  </object>
+  <object id="5" x="96" y="256" width="128" height="32">
    <properties>
     <property name="solidas" value="arriba1"/>
    </properties>
   </object>
-  <object id="5" x="96" y="257.333" width="126.667" height="26.6667">
-   <properties>
-    <property name="solidas" value="arriba1"/>
-   </properties>
-  </object>
-  <object id="6" x="96" y="385.333" width="128" height="29.3333">
+  <object id="6" x="96" y="384.06" width="128" height="32.4242">
    <properties>
     <property name="solidas" value="arriba1"/>
    </properties>
@@ -62,7 +62,7 @@
     <property name="solidas" value="arriba1"/>
    </properties>
   </object>
-  <object id="8" x="286.667" y="290.667" width="190.667" height="57.3333">
+  <object id="8" x="288" y="288" width="192" height="64">
    <properties>
     <property name="solidas" value="arriba1"/>
    </properties>
@@ -72,7 +72,7 @@
     <property name="solidas" value="arriba1"/>
    </properties>
   </object>
-  <object id="10" x="573.333" y="97.3333" width="32" height="60">
+  <object id="10" x="575.833" y="94.8333" width="32" height="65">
    <properties>
     <property name="solidas" value="derecha2"/>
    </properties>
@@ -82,7 +82,7 @@
     <property name="solidas" value="abajo1"/>
    </properties>
   </object>
-  <object id="12" x="993.333" y="289.333" width="188" height="58.6667">
+  <object id="12" x="992" y="288" width="192" height="64">
    <properties>
     <property name="solidas" value="izquierda2+derecha1"/>
    </properties>
@@ -97,7 +97,7 @@
     <property name="solidas" value="izquierda2+derecha1"/>
    </properties>
   </object>
-  <object id="16" x="509.333" y="576" width="130.667" height="61.3333">
+  <object id="16" x="511.666" y="576" width="128.334" height="61.3333">
    <properties>
     <property name="solidas" value=""/>
    </properties>
@@ -107,7 +107,7 @@
     <property name="solidas" value="izquierda2"/>
    </properties>
   </object>
-  <object id="18" x="-2.66667" y="640" width="1281.33" height="128">
+  <object id="18" x="0" y="640" width="1280" height="128">
    <properties>
     <property name="solidas" value="arriba1"/>
    </properties>

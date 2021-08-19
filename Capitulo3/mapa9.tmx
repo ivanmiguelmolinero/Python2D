@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="40" height="24" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#ffffff" nextobjectid="40">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="40" height="24" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#ffffff" nextobjectid="9">
  <tileset firstgid="1" source="tmw_desert.tsx"/>
  <layer name="capa0" width="40" height="24">
   <data encoding="csv">
@@ -16,13 +16,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,10,0,0,0,0,0,10,10,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,15,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,15,15,15,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,15,15,15,15,15,15,15,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,15,15,15,15,15,15,15,15,15,15,15,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -30,43 +30,46 @@
 </data>
  </layer>
  <objectgroup name="objetos">
-  <object id="1" x="0" y="640" width="1280.39" height="128">
+  <object id="1" x="545" y="450" width="31" height="29">
    <properties>
     <property name="solidas" value=""/>
    </properties>
   </object>
-  <object id="2" x="416" y="512" width="160" height="32">
-   <properties>
-    <property name="solidas" value="arriba1"/>
-   </properties>
-  </object>
-  <object id="6" x="1152" y="640">
+  <object id="2" x="513" y="482" width="95" height="28">
    <properties>
     <property name="solidas" value=""/>
    </properties>
-   <polyline points="0,0 0,-640"/>
   </object>
-  <object id="7" x="416" y="416" width="160" height="32">
-   <properties>
-    <property name="solidas" value="arriba1"/>
-   </properties>
-  </object>
-  <object id="15" x="0" y="0">
+  <object id="3" x="481" y="511" width="159" height="32">
    <properties>
     <property name="solidas" value=""/>
    </properties>
-   <polyline points="0,0 1280,0"/>
   </object>
-  <object id="31" x="736" y="512" width="192" height="64">
+  <object id="4" x="417" y="544" width="254" height="31">
    <properties>
-    <property name="solidas" value="arriba1"/>
+    <property name="solidas" value=""/>
    </properties>
   </object>
-  <object id="33" x="160" y="512">
+  <object id="5" x="351" y="575" width="384" height="33">
    <properties>
-    <property name="solidas" value="arriba1"/>
+    <property name="solidas" value=""/>
    </properties>
-   <polyline points="0,0 192,0"/>
+  </object>
+  <object id="6" x="288" y="609" width="511" height="32">
+   <properties>
+    <property name="solidas" value=""/>
+   </properties>
+  </object>
+  <object id="7" x="0" y="640" width="1280" height="128">
+   <properties>
+    <property name="solidas" value=""/>
+   </properties>
+  </object>
+  <object id="8" x="1.25" y="0">
+   <properties>
+    <property name="solidas" value=""/>
+   </properties>
+   <polyline points="0,0 1277.5,-1.25"/>
   </object>
  </objectgroup>
 </map>

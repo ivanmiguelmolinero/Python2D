@@ -51,7 +51,7 @@
     <property name="solidas" value="arriba1"/>
    </properties>
   </object>
-  <object id="11" x="96" y="256" width="160" height="32">
+  <object id="11" x="96" y="254.818" width="160" height="33.1818">
    <properties>
     <property name="solidas" value="arriba1"/>
    </properties>
@@ -77,7 +77,7 @@
     <property name="solidas" value="abajo1"/>
    </properties>
   </object>
-  <object id="51" x="320" y="288" width="192" height="64">
+  <object id="51" x="320" y="290.273" width="192" height="61.7273">
    <properties>
     <property name="solidas" value="arriba1"/>
    </properties>

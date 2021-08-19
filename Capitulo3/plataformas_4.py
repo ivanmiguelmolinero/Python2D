@@ -1,30 +1,27 @@
 #-------------------------------------------------------------------------------
-# Name:        plataformas_3
+# Name:        plataformas_4
 # Purpose:
 #
 # Author:      ivijo
 #
-# Created:     18/08/2021
+# Created:     19/08/2021
 # Copyright:   (c) ivijo 2021
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 
-import cocos
-from pyglet import window
-from pyglet.libs.win32.constants import PROCESS_CREATE_PROCESS
 from pyglet.window import key
 from cocos.sprite import Sprite
 from cocos.scene import Scene
 from cocos.layer import ScrollableLayer, ScrollingManager
 from cocos.tiles import load_tmx
-from cocos.mapcolliders import RectMapCollider, make_collision_handler
+from cocos.mapcolliders_plus import TmxObjectMapCollider, make_collision_handler
 from cocos.actions import Action
 from cocos.director import director
 
 class MiGuerrero(Sprite):
     en_suelo = True
     VEL_MOV = 200
-    VEL_SALTO = 400
+    VEL_SALTO = 500
     GRAVEDAD = -800
 
     def __init__(self, image):
@@ -50,17 +47,17 @@ class MiGuerrero(Sprite):
         self.en_suelo = (despues.y == antes.y)
         self.position = despues.center
 
-        if personaje.pista == 1 and self.x > 640:
+        if personaje.pista == 1 and self.x > 1280:
             personaje.x = 0
             Escena2()
         if personaje.pista == 2 and self.x < 0:
-            personaje.x = 640
+            personaje.x = 1280
             Escena1()
-        if personaje.pista == 2 and self.x > 640:
+        if personaje.pista == 2 and self.x > 1280:
             personaje.x = 0
             Escena3()
         if personaje.pista == 3 and self.x < 0:
-            personaje.x = 640
+            personaje.x = 1280
             Escena2()
 
 
@@ -73,23 +70,25 @@ class Escena1(Scene):
     def __init__(self):
         global personaje, mapa_colision
         super().__init__()
-        mi_mapa = load_tmx('mapa5.tmx')['capa0']
+        mi_mapa1 = load_tmx('mapa8.tmx')['objetos']
+        mi_mapa1_1 = load_tmx('mapa8.tmx')['capa0']
         if 'personaje' not in globals():
-            personaje = MiGuerrero('mi_guerrero_1.png')
-            personaje.position = (200, 200)
+            personaje = MiGuerrero('mi_guerrero_2.png')
+            personaje.position = (200, 300)
             personaje.do(Control())
         personaje.pista = 1
 
         manejador_scroll = ScrollingManager()
-        manejador_scroll.add(mi_mapa)
+        manejador_scroll.add(mi_mapa1)
+        manejador_scroll.add(mi_mapa1_1)
 
         capa_personaje = ScrollableLayer()
         capa_personaje.add(personaje)
 
         if 'mapa_colision' not in globals():
-            mapa_colision = RectMapCollider()
+            mapa_colision = TmxObjectMapCollider()
             mapa_colision.on_bump_handler = mapa_colision.on_bump_slide
-        personaje.man_col = make_collision_handler(mapa_colision, mi_mapa)
+        personaje.man_col = make_collision_handler(mapa_colision, mi_mapa1)
 
         self.add(manejador_scroll, z = 0)
         self.add(capa_personaje, z = 1)
@@ -100,10 +99,12 @@ class Escena2(Scene):
     def __init__(self):
         super().__init__()
         personaje.pista = 2
-        mi_mapa2 = load_tmx('mapa6.tmx')['capa0']
+        mi_mapa2 = load_tmx('mapa9.tmx')['objetos']
+        mi_mapa2_1 = load_tmx('mapa9.tmx')['capa0']
 
         manejador_scroll = ScrollingManager()
         manejador_scroll.add(mi_mapa2)
+        manejador_scroll.add(mi_mapa2_1)
 
         capa_personaje = ScrollableLayer()
         capa_personaje.add(personaje)
@@ -119,10 +120,12 @@ class Escena3(Scene):
     def __init__(self):
         super().__init__()
         personaje.pista = 3
-        mi_mapa3 = load_tmx('mapa7.tmx')['capa0']
+        mi_mapa3 = load_tmx('mapa10.tmx')['objetos']
+        mi_mapa3_1 = load_tmx('mapa10.tmx')['capa0']
 
         manejador_scroll = ScrollingManager()
         manejador_scroll.add(mi_mapa3)
+        manejador_scroll.add(mi_mapa3_1)
 
         capa_personaje = ScrollableLayer()
         capa_personaje.add(personaje)
@@ -135,8 +138,8 @@ class Escena3(Scene):
 
 
 if __name__ == '__main__':
-    ventana = director.init(width = 640, height = 480, caption = 'Plataformas 3')
-    ventana.set_location(500, 300)
+    ventana = director.init(width = 1280, height = 768, caption = 'Plataformas 4')
+    ventana.set_location(200, 40)
     man_tec = key.KeyStateHandler()
     director.window.push_handlers(man_tec)
     Escena1()
