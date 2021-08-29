@@ -1,10 +1,10 @@
 #-------------------------------------------------------------------------------
-# Name:        juego_2
+# Name:        juego_3
 # Purpose:
 #
 # Author:      ivijo
 #
-# Created:     28/08/2021
+# Created:     29/08/2021
 # Copyright:   (c) ivijo 2021
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
@@ -15,9 +15,11 @@ from cocos.scene import Scene
 from cocos.layer import ScrollableLayer, ScrollingManager
 from cocos.tiles import load_tmx
 from cocos.mapcolliders_plus import TmxObjectMapCollider, make_collision_handler
-from cocos.actions import Action, Delay, CallFunc
+from cocos.collision_model import CircleShape
+from cocos.actions import Action, Delay, CallFunc, MoveBy, Repeat
 from cocos.director import director
 from cocos.euclid import Vector2
+from random import randint
 
 class MiGuerrero(Sprite):
     en_suelo = True
@@ -85,6 +87,25 @@ class MiCuchillo(Sprite):
             self.position -= Vector2(20, 0)
 
 
+class MiDragon(Sprite):
+    def __init__(self, image):
+        super().__init__(image)
+
+    def update(self, dt):
+        if randint(1, 1000) > 980:
+            llama = MiFuegoDragon('mi_fuego_dragon.png', self.x - 50, self.y + 40)
+            self.parent.add(llama)
+
+
+class MiFuegoDragon(Sprite):
+    def __init__(self, image, x, y):
+        super().__init__(image)
+        self.position = (x, y)
+
+    def update(self, dt):
+        self.position += Vector2(-10, 0)
+
+
 class Control(Action):
     def step(self, dt):
         for objeto in self.target.parent.children:
@@ -98,8 +119,13 @@ class Escena(Scene):
         mi_mapa1 = load_tmx('mapa_plataformas.tmx')['objetos']
         mi_mapa1_1 = load_tmx('mapa_plataformas.tmx')['capa0']
 
+        dragon = MiDragon('mi_dragon.png')
+        dragon.position = (2500, 200)
+
         personaje = MiGuerrero('mi_guerrero_2.png')
         personaje.position = (200, 300)
+
+        dragon.do(Repeat(MoveBy((0, 400), 1) + MoveBy((0, -400), 1)))
         personaje.do(Control())
 
         capa_fondo = ScrollableLayer()
@@ -110,6 +136,7 @@ class Escena(Scene):
 
         capa_personaje = ScrollableLayer()
         capa_personaje.add(personaje)
+        capa_personaje.add(dragon)
 
         manejador_scroll = ScrollingManager()
         manejador_scroll.add(mi_mapa1, z = 0)

@@ -1,10 +1,10 @@
 #-------------------------------------------------------------------------------
-# Name:        juego_2
+# Name:        juego_4
 # Purpose:
 #
 # Author:      ivijo
 #
-# Created:     28/08/2021
+# Created:     29/08/2021
 # Copyright:   (c) ivijo 2021
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
@@ -15,9 +15,13 @@ from cocos.scene import Scene
 from cocos.layer import ScrollableLayer, ScrollingManager
 from cocos.tiles import load_tmx
 from cocos.mapcolliders_plus import TmxObjectMapCollider, make_collision_handler
-from cocos.actions import Action, Delay, CallFunc
+from cocos.collision_model import AARectShape, CollisionManagerBruteForce
+from cocos.particle_systems import Explosion
+from cocos.particle import Color
+from cocos.actions import Action, Delay, CallFunc, MoveBy, Repeat
 from cocos.director import director
 from cocos.euclid import Vector2
+from random import randint
 
 class MiGuerrero(Sprite):
     en_suelo = True
@@ -77,16 +81,102 @@ class MiCuchillo(Sprite):
         super().__init__(image)
         self.position = (x, y)
         self.direccion = dir
+        self.cshape = AARectShape(self.position, self.width/5, self.height/5)
 
     def update(self, dt):
+        coor_cuchillo = manejador_scroll.world_to_screen(self.x, self.y)[0]
+        if coor_cuchillo > 1280 or coor_cuchillo < 0:
+            self.kill()
         if self.direccion == 'd':
             self.position += Vector2(20, 0)
         if self.direccion == 'i':
             self.position -= Vector2(20, 0)
+        self.cshape.center = Vector2(self.position[0], self.position[1])
+
+
+class MiDragon(Sprite):
+    def __init__(self, image):
+        super().__init__(image)
+        self.cshape = AARectShape(self.position, self.width/2, self.height/2)
+
+    def update(self, dt):
+        if randint(1, 1000) > 980:
+            llama = MiFuegoDragon('mi_fuego_dragon.png', self.x - 50, self.y + 40)
+            self.parent.add(llama)
+        self.cshape.center = Vector2(self.position[0], self.position[1])
+
+
+class MiFuegoDragon(Sprite):
+    def __init__(self, image, x, y):
+        super().__init__(image)
+        self.position = (x, y)
+        self.cshape = AARectShape(self.position, self.width/5, self.height/5)
+
+    def update(self, dt):
+        self.position += Vector2(-10, 0)
+        if self.x < 0:
+            self.kill()
+        self.cshape.center = Vector2(self.position[0], self.position[1])
+
+
+class MiExplosion1(Explosion):
+    def __init__(self, pos):
+        super().__init__()
+        self.position = pos
+        self.auto_remove_on_finish = True
+        self.total_particles = 700
+        self.emission_rate = 700
+        self.size = 2
+        self.life = 1
+        self.scale = 2
+        self.start_color = Color(255, 255, 0, 255)
+
+    def update(self, dt):
+        pass
+
+
+class MiExplosion2(Explosion):
+    def __init__(self, pos):
+        super().__init__()
+        self.position = pos
+        self.auto_remove_on_finish = True
+        self.total_particles = 700
+        self.emission_rate = 1200
+        self.size = 10
+        self.life = 3
+        self.start_color = Color(0, 255, 100, 255)
+
+    def update(self, dt):
+        pass
 
 
 class Control(Action):
+    def start(self):
+        self.mc = CollisionManagerBruteForce()
+
     def step(self, dt):
+        self.mc.clear()
+        for objeto in self.target.parent.children:
+            if isinstance(objeto[1], (MiCuchillo, MiFuegoDragon, MiDragon)):
+                self.mc.add(objeto[1])
+
+        for elemento in list(self.mc.iter_all_collisions()):
+            a = set([type(elemento[0]), type(elemento[1])])
+            b = set([MiCuchillo, MiFuegoDragon])
+            c = set([MiCuchillo, MiDragon])
+            if a == b:
+                self.target.parent.add(MiExplosion1(elemento[0].position))
+                if (0, elemento[0]) in self.target.parent.children:
+                    elemento[0].kill()
+                if (0, elemento[1]) in self.target.parent.children:
+                    elemento[1].kill()
+            if a == c:
+                self.target.parent.add(MiExplosion2(elemento[0].position))
+                if (0, elemento[0]) in self.target.parent.children:
+                    elemento[0].kill()
+                if (0, elemento[1]) in self.target.parent.children:
+                    elemento[1].kill()
+
         for objeto in self.target.parent.children:
             objeto[1].update(dt)
 
@@ -97,6 +187,10 @@ class Escena(Scene):
         super().__init__()
         mi_mapa1 = load_tmx('mapa_plataformas.tmx')['objetos']
         mi_mapa1_1 = load_tmx('mapa_plataformas.tmx')['capa0']
+
+        dragon = MiDragon('mi_dragon.png')
+        dragon.position = (2500, 200)
+        dragon.do(Repeat(MoveBy((0, 400), 1) + MoveBy((0, -400), 1)))
 
         personaje = MiGuerrero('mi_guerrero_2.png')
         personaje.position = (200, 300)
@@ -109,6 +203,7 @@ class Escena(Scene):
             capa_fondo.add(a)
 
         capa_personaje = ScrollableLayer()
+        capa_personaje.add(dragon)
         capa_personaje.add(personaje)
 
         manejador_scroll = ScrollingManager()
