@@ -108,10 +108,9 @@ class MiEnemigo(Sprite):
         self.cshape.center = Vector2(self.position[0], self.position[1])
 
 
-class MiDragon(Sprite):
+class MiDragon(MiEnemigo):
     def __init__(self, image):
         super().__init__(image)
-        self.cshape = AARectShape(self.position, self.width/2, self.height/2)
 
     def update(self, dt):
         if randint(1, 1000) > 980:
