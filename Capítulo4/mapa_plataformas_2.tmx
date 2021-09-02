@@ -150,12 +150,12 @@
     <property name="solidas" value=""/>
    </properties>
   </object>
-  <object id="26" x="2752" y="448" width="32" height="32">
+  <object id="26" x="2752" y="544" width="32" height="32">
    <properties>
     <property name="p_dragon" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="36" x="5088" y="224" width="32" height="416">
+  <object id="36" x="5088" y="0" width="32" height="32">
    <properties>
     <property name="p_salida" type="bool" value="true"/>
     <property name="solidas" value="derecha2"/>
