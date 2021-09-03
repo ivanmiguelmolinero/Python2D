@@ -48,6 +48,9 @@ class MiGuerrero(Sprite):
             vy += self.GRAVEDAD * dt
             if self.en_suelo and man_tec[key.SPACE]:
                 vy = self.VEL_SALTO
+                sonido_salto = Sound("./Capítulo4/jump.wav")
+                Sound.set_volume(sonido_salto, 0.25)
+                Sound.play(sonido_salto)
             if man_tec[key.LEFT]:
                 self.direccion = 'izquierda'
             if man_tec[key.RIGHT]:
@@ -86,7 +89,11 @@ class MiGuerrero(Sprite):
                 self.position = despues.center
             else:
                 music.stop()
-                director.replace(Scene(CapaGanador()))
+                finish = lambda : director.replace(Scene(CapaGanador()))
+                music.load("Capítulo4\Level_Complete.mp3")
+                music.set_volume(0.5)
+                music.play()
+                self.do(Delay(5.5) + CallFunc(finish))
             self.cshape.center = Vector2(self.position[0], self.position[1])
 
             if despues.x >= 640:
@@ -138,7 +145,7 @@ class MiDragon(MiEnemigo):
     def update(self, dt):
         if randint(1, 1000) > 980:
             sonido_llama = Sound('./Capítulo4/fuego_dragon.wav')
-            Sound.set_volume(sonido_llama, 0.05)
+            Sound.set_volume(sonido_llama, 0.25)
             Sound.play(sonido_llama)
             llama = MiFuegoDragon('mi_fuego_dragon.png', self.x - 50, self.y + 40)
             self.parent.add(llama)
@@ -223,14 +230,14 @@ class Control(Action):
             d = set([MiCuchillo, MiEnemigo])
 
             if a in self.rel and personaje.reviviendo == False:
-                sonido = Sound('./Capítulo4/golpeo_personaje.wav')
+                sonido = Sound('./Capítulo4/daño.mp3')
                 Sound.play(sonido)
                 personaje.visible = False
                 personaje.reviviendo = True
                 personaje.do(Delay(1.5) + CallFunc(self.f1))
             if a == b:
                 sonido = Sound('./Capítulo4/col_cuchillo_enemigo.wav')
-                Sound.set_volume(sonido, 0.25)
+                Sound.set_volume(sonido, 0.35)
                 Sound.play(sonido)
                 self.target.parent.add(MiExplosion1(elemento[0].position))
                 if (0, elemento[0]) in self.target.parent.children:
@@ -240,7 +247,7 @@ class Control(Action):
                 hud.puntos += 5
             if a == c:
                 sonido = Sound('./Capítulo4/col_cuchillo_dragon.wav')
-                Sound.set_volume(sonido, 0.25)
+                Sound.set_volume(sonido, 0.35)
                 Sound.play(sonido)
                 self.target.parent.add(MiExplosion2(elemento[0].position))
                 if (0, elemento[0]) in self.target.parent.children:
@@ -250,7 +257,7 @@ class Control(Action):
                 hud.puntos += 50
             if a == d:
                 sonido = Sound('./Capítulo4/col_cuchillo_enemigo.wav')
-                Sound.set_volume(sonido, 0.25)
+                Sound.set_volume(sonido, 0.35)
                 Sound.play(sonido)
                 self.target.parent.add(MiExplosion3(elemento[0].position))
                 if (0, elemento[0]) in self.target.parent.children:
@@ -302,15 +309,24 @@ class CapaInicio(Layer):
     def __init__(self):
         super().__init__()
         self.add(MiEtiqueta('Pulse un botón del ratón para iniciar', 640, 384))
+        music.load('./Capítulo4/fondo_inicio.mp3')
+        music.set_volume(0.15)
+        music.play(-1)
 
     def on_mouse_press(self, x, y, buttons, modifiers):
-        director.replace(Escena())
+        music.stop()
+        start = lambda : director.replace(Escena())
+        sonido_inicio = Sound("Capítulo4\mario-bros-here-we-go.mp3")
+        Sound.play(sonido_inicio)
+        self.do(Delay(2.2) + CallFunc(start))
 
 
 class CapaGameOver(Layer):
     def __init__(self):
         super().__init__()
         self.add(MiEtiqueta('GAME OVER', 640, 384))
+        sonido_gameover = Sound("./Capítulo4/bowser.mp3")
+        Sound.play(sonido_gameover)
         self.do(Delay(3) + CallFunc(lambda : director.replace(Scene(CapaInicio()))))
 
 
@@ -327,7 +343,7 @@ class Escena(Scene):
         super().__init__()
 
         music.load('./Capítulo4/musica_fondo_retro.wav')
-        music.set_volume(0.03)
+        music.set_volume(0.15)
         music.play(-1)
 
         mi_mapa1 = load_tmx('mapa_plataformas_2.tmx')['objetos']
