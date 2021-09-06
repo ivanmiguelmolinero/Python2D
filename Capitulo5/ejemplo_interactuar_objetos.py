@@ -1,3 +1,13 @@
+#-------------------------------------------------------------------------------
+# Name:        ejemplo_interactuar_objetos
+# Purpose:
+#
+# Author:      ivijo
+#
+# Created:     06/09/2021
+# Copyright:   (c) ivijo 2021
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
 
 from pyglet.window import key
 from pyglet.image import load
@@ -6,11 +16,10 @@ from cocos.scene import Scene
 from cocos.layer import ScrollableLayer, ScrollingManager
 from cocos.tiles import load_tmx
 from cocos.mapcolliders_plus import make_collision_handler, TmxObjectMapCollider
-from cocos.collision_model import CollisionManagerBruteForce
 from cocos.actions import Action, JumpBy
 from cocos.particle_systems import Sun
 from cocos.director import director
-from cocos.collision_model import AARectShape
+from cocos.collision_model import AARectShape, CollisionManagerBruteForce
 from cocos.euclid import Vector2
 
 class MiGuerrero(Sprite):
@@ -23,7 +32,7 @@ class MiGuerrero(Sprite):
     def __init__(self, image):
         super().__init__(image)
         self.velocidad = (0, 0)
-        self.cshape = AARectShape(Vector2(0,0), self.width/3, self.height/3)
+        self.cshape = AARectShape(Vector2(0, 0), self.width/3, self.height/3)
 
     def update(self, dt):
         if self.modo == 'normal':
@@ -32,7 +41,7 @@ class MiGuerrero(Sprite):
             vy += self.GRAVEDAD * dt
             if self.en_suelo and man_tec[key.SPACE]:
                 vy = self.VEL_SALTO
-
+            
             dx = vx * dt
             dy = vy * dt
 
@@ -48,14 +57,14 @@ class MiGuerrero(Sprite):
 
         if self.modo == 'liana':
             if man_tec[key.SPACE] and man_tec[key.RIGHT]:
-                self.do(JumpBy((185,-20), 80, 1, 1))
+                self.do(JumpBy((185, -20), 80, 1, 1))
                 self.cshape.center = Vector2(self.position[0], self.position[1])
-                self.image = load('./Material Adicional/Videojuegos_Python/mi_guerrero_2.png')
+                self.image = load('./Capitulo5/mi_guerrero_2.png')
             elif man_tec[key.SPACE] and man_tec[key.LEFT]:
-                self.do(JumpBy((-195,-20), 80, 1, 1))
+                self.do(JumpBy((-195, -20), 80, 1, 1))
                 self.cshape.center = Vector2(self.position[0], self.position[1])
-                self.image = load('./Material Adicional/Videojuegos_Python/mi_guerrero_2.png')
-
+                self.image = load('./Capitulo5/mi_guerrero_2.png')
+            
         if self.modo == 'seto':
             despues_subiendo = self.position[1] + 5 * man_tec[key.UP]
             despues_bajando = self.position[1] - 5 * man_tec[key.DOWN]
@@ -63,9 +72,9 @@ class MiGuerrero(Sprite):
                 delta_y = 5 * man_tec[key.UP] - 5 * man_tec[key.DOWN]
                 self.position += Vector2(0, delta_y)
             if man_tec[key.SPACE] and man_tec[key.LEFT]:
-                self.do(JumpBy((-195,-20), 80, 1,1))
+                self.do(JumpBy((-195, -20), 80, 1, 1))
                 self.cshape.center = Vector2(self.position[0], self.position[1])
-                self.image = load('./Material Adicional/Videojuegos_Python/mi_guerrero_2.png')
+                self.image = load('./Capitulo5/mi_guerrero_2.png')
 
 
 class MiObjetoInteractuable(Sprite):
@@ -73,7 +82,7 @@ class MiObjetoInteractuable(Sprite):
         super().__init__(image)
         self.position = (x, y)
         rect = self.get_rect()
-        self.cshape = AARectShape(Vector2(0,0), self.width/3, self.height/3)
+        self.cshape = AARectShape(Vector2(0, 0), self.width/3, self.height/3)
         self.cshape.center = Vector2(rect.center[0], rect.center[1])
 
     def update(self, dt):
@@ -83,6 +92,7 @@ class MiObjetoInteractuable(Sprite):
 class Control(Action):
     def start(self):
         self.mc = CollisionManagerBruteForce()
+
     def step(self, dt):
         for objeto in self.target.parent.children:
             objeto[1].update(dt)
@@ -98,14 +108,14 @@ class Control(Action):
                 self.target.GRAVEDAD = 0
                 self.target.modo = 'liana'
 
-                self.target.position = (liana_agarrada[0].position[0]-12,
-                                        liana_agarrada[0].position[1]-35)
-                self.target.image = load('./Material Adicional/Videojuegos_Python/guerrero_agarrando.png')
+                self.target.position = (liana_agarrada[0].position[0] - 12,
+                                        liana_agarrada[0].position[1] - 35)
+                self.target.image = load('./Capitulo5/guerrero_agarrando.png')
             if seto in colisiones_personaje:
                 self.target.GRAVEDAD = 0
                 self.target.modo = 'seto'
-                self.target.image = load('./Material Adicional/Videojuegos_Python/guerrero_agarrando.png')
-                self.target.position = (seto.position[0]-35,
+                self.target.image = load('./Capitulo5/guerrero_agarrando.png')
+                self.target.position = (seto.position[0] - 35,
                                         self.target.position[1])
         else:
             self.target.modo = 'normal'
@@ -115,14 +125,14 @@ class Control(Action):
 class Escena(Scene):
     def __init__(self):
         global personaje, mapa_colision, man_tec,\
-               objetos_colisionables, lianas, seto
+            objetos_colisionables, lianas, seto
         super().__init__()
 
         mi_mapa1 = load_tmx('mapa_plataformas_3.tmx')['objetos']
         mi_mapa1_1 = load_tmx('mapa_plataformas_3.tmx')['capa0']
 
         personaje = MiGuerrero('mi_guerrero_2.png')
-        personaje.position = (200,300)
+        personaje.position = (200, 300)
         personaje.do(Control())
 
         fondo = Sprite('mi_fondo_2.png')
@@ -156,16 +166,16 @@ class Escena(Scene):
         mapa_colision.on_bump_handler = mapa_colision.on_bump_slide
         personaje.man_col = make_collision_handler(mapa_colision, mi_mapa1)
 
-        self.add(capa_fondo, z=0)
-        self.add(manejador_scroll, z=1)
-        self.add(capa_personaje, z=2)
+        self.add(capa_fondo, z = 0)
+        self.add(manejador_scroll, z = 1)
+        self.add(capa_personaje, z = 2)
         director.run(self)
 
 
 if __name__ == '__main__':
-    ventana = director.init(width=1280, height=768,
-                            caption='Interactuando con objetos')
-    ventana.set_location(300,200)
+    ventana = director.init(width = 1280, height = 768,
+                            caption = 'Interactuando con objetos')
+    ventana.set_location(200, 40)
     man_tec = key.KeyStateHandler()
     director.window.push_handlers(man_tec)
     Escena()
